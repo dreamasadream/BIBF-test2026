@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIBF展区匹配测试｜你的灵魂归属哪个展区✨</title>
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f7fbf9 0%, #eef6f3 100%);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 12px 35px rgba(110, 160, 140, 0.08);
+      padding: 42px;
+      overflow: hidden;
+      position: relative;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 30px;
+      color: #468c76;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: #749c8d;
+      line-height: 1.6;
+    }
+
+    .progress {
+      width: 100%;
+      height: 6px;
+      background: #e6f0ec;
+      border-radius: 3px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #73b8a3, #468c76);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .quiz-card {
+      display: none;
+      animation: slideIn 0.5s ease forwards;
+    }
+
+    .quiz-card.active {
+      display: block;
+    }
+
+    .question {
+      font-size: 20px;
+      color: #3a5c50;
+      font-weight: 600;
+      margin-bottom: 26px;
+      line-height: 1.55;
+    }
+
+    .options {
+      display: grid;
+      gap: 16px;
+    }
+
+    .option {
+      padding: 18px 24px;
+      background: #f6faf8;
+      border: 2px solid transparent;
+      border-radius: 18px;
+      font-size: 16px;
+      color: #4a6b5f;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option:hover {
+      background: #eaf4ef;
+      border-color: #92c8b6;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(70, 140, 118, 0.12);
+    }
+
+    .option.selected {
+      background: #468c76;
+      color: white;
+      border-color: #3a7361;
+    }
+
+    .btn-group {
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      padding: 14px 32px;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .prev-btn {
+      background: #e1ebe7;
+      color: #4a6b5f;
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, #73b8a3, #468c76);
+      color: white;
+      margin-left: auto;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(70, 140, 118, 0.2);
+    }
+
+    .result-page {
+      display: none;
+      text-align: center;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .result-page.show {
+      display: block;
+    }
+
+    .result-icon {
+      font-size: 72px;
+      color: #468c76;
+      margin-bottom: 20px;
+    }
+
+    .result-title {
+      font-size: 28px;
+      color: #3a5c50;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .result-desc {
+      font-size: 17px;
+      color: #5a7d70;
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+
+    .result-tip {
+      background: #f6faf8;
+      border-left: 4px solid #73b8a3;
+      padding: 18px 22px;
+      border-radius: 14px;
+      text-align: left;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .restart-btn {
+      background: linear-gradient(135deg, #73b8a3, #468c76);
+      color: white;
+      padding: 16px 40px;
+      font-size: 17px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 28px 22px;
+      }
+      .header h1 {
+        font-size: 25px;
+      }
+      .question {
+        font-size: 18px;
+      }
+      .btn-group {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .next-btn, .prev-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-book-open"></i> BIBF展区匹配测试</h1>
+      <p>寻一处与灵魂契合的书展角落✨</p>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <!-- 答题区域 -->
+    <div id="quizWrapper">
+      <div class="quiz-card active" data-card="0">
+        <div class="question">1. 周末一个人放松，你更愿意？</div>
+        <div class="options">
+          <div class="option" data-weight="网络出版:1">A. 追剧、看网文、网上冲浪</div>
+          <div class="option" data-weight="世界礼物市集:1,动漫出版:1">B. 逛线下市集、打卡新店</div>
+          <div class="option" data-weight="插画展:1">C. 画画、做手账、逛艺术展</div>
+          <div class="option" data-weight="绘本展:1,美食书展:1">D. 烘焙、喝咖啡、发呆晒太阳</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="1">
+        <div class="question">2. 逛文创 / 书店，你最常去？</div>
+        <div class="options">
+          <div class="option" data-weight="动漫出版:1,网络出版:1">A. 动漫周边、网红文创、热门 IP 区</div>
+          <div class="option" data-weight="世界礼物市集:1,主宾国:0.5">B. 民族手作、地域文化、外文书区</div>
+          <div class="option" data-weight="美食书展:1,绘本展:1">C. 美食食谱、暖心绘本、生活实用区</div>
+          <div class="option" data-weight="艺术书展:1">D. 独立杂志、小众画册、先锋艺术书区</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="2">
+        <div class="question">3. 下列气味里，哪一种最让你心动？</div>
+        <div class="options">
+          <div class="option" data-weight="美食书展:1,世界礼物市集:1">A. 烘焙黄油、香料、异国美食香气</div>
+          <div class="option" data-weight="网络出版:1,主宾国:0.5">B. 雨后的青草和泥土、树的清新气味</div>
+          <div class="option" data-weight="绘本展:1">C. 柔软织物、旧书页、阳光晒过的味道</div>
+          <div class="option" data-weight="艺术书展:1">D. 油墨、颜料、木质调艺术感气息</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="3">
+        <div class="question">4. 挑选书籍，你的首要标准是？</div>
+        <div class="options">
+          <div class="option" data-weight="插画展:1">A. 颜值，爱上这本书只需要一眼</div>
+          <div class="option" data-weight="艺术书展:1">B. 风格，我能从书中体会到思想或情感共鸣</div>
+          <div class="option" data-weight="绘本展:1,美食书展:1">C. 内容，这本书超级有意思的啊</div>
+          <div class="option" data-weight="动漫出版:1">D. 热度，这本书是热门 IP / 我推也在读这本书</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="4">
+        <div class="question">5. 以下哪个画面最让你内心安稳松弛？</div>
+        <div class="options">
+          <div class="option" data-weight="世界礼物市集:1,网络出版:1,主宾国:0.5">A. 漫步异国街头，在转角处遇到正在演奏手风琴的街头艺术家</div>
+          <div class="option" data-weight="插画展:1">B. 午后的安静画室，柔和的日光下连画布上的笔触都清晰可见</div>
+          <div class="option" data-weight="动漫出版:1">C. 热闹的线下同好聚会，偶遇了自己最喜欢的 coser 老师</div>
+          <div class="option" data-weight="绘本展:1,艺术书展:1">D. 窗外细雨飘落，窝在沙发里捧着绘本或热茶放空思维</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="5">
+        <div class="question">6. 如果拥有一种超能力，你更想要？</div>
+        <div class="options">
+          <div class="option" data-weight="绘本展:1,网络出版:1">A. 进入奇幻世界，与伙伴们一起去冒险</div>
+          <div class="option" data-weight="动漫出版:1">B. 穿梭二次元，与喜欢的角色相遇</div>
+          <div class="option" data-weight="插画展:1,美食书展:1">C. 画出心中所想，把幻想变成现实画面</div>
+          <div class="option" data-weight="世界礼物市集:1">D. 任意门，能随时前往世界的每一个角落</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="6">
+        <div class="question">7. 手机相册里最多的是？</div>
+        <div class="options">
+          <div class="option" data-weight="绘本展:1">A. 可爱治愈的猫猫狗狗、好看的晚霞和云朵</div>
+          <div class="option" data-weight="网络出版:1">B. 趣味表情包、热门梗图</div>
+          <div class="option" data-weight="美食书展:1,世界礼物市集:1,主宾国:0.5">C. 旅行打卡、各地的有趣小物件</div>
+          <div class="option" data-weight="艺术书展:1">D. 美术馆的画、精致的手作</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="7">
+        <div class="question">8. 做选择时，你更依赖？</div>
+        <div class="options">
+          <div class="option" data-weight="插画展:1">A. 审美直觉，被视觉感受驱动</div>
+          <div class="option" data-weight="艺术书展:1,世界礼物市集:1">B. 内心感受，凭情绪与价值观判断</div>
+          <div class="option" data-weight="美食书展:1">C. 实用主义，优先提升生活幸福感</div>
+          <div class="option" data-weight="动漫出版:1,网络出版:1">D. 情怀热爱，沉浸在自己喜欢的幻想世界里</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="8">
+        <div class="question">9. 你最喜欢哪一种天气？</div>
+        <div class="options">
+          <div class="option" data-weight="绘本展:1,美食书展:1">A. 晴天，阳光柔软，微风和煦</div>
+          <div class="option" data-weight="网络出版:1">B. 雷雨天，暴烈多变，充满未知</div>
+          <div class="option" data-weight="艺术书展:1,插画展:1">C. 阴雨天，连绵安静，深沉内敛</div>
+          <div class="option" data-weight="世界礼物市集:1">D. 飘雪天，浪漫梦幻，纯粹治愈</div>
+        </div>
+      </div>
+
+      <div class="quiz-card" data-card="9">
+        <div class="question">10. 以下哪句话更打动你？</div>
+        <div class="options">
+          <div class="option" data-weight="世界礼物市集:1,主宾国:0.5">A. 刘慈欣：给岁月以文明，而不是给文明以岁月。</div>
+          <div class="option" data-weight="艺术书展:1,插画展:1">B. 尼采：每一个不曾起舞的日子，都是对生命的辜负</div>
+          <div class="option" data-weight="绘本展:1">C. 圣埃克苏佩里：真正重要的东西，用眼睛是看不见的。</div>
+          <div class="option" data-weight="网络出版:1">D. 博尔赫斯：没有比思考更复杂的享受了，所以我们乐此不倦。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="prev-btn" id="prevBtn" disabled>上一题</button>
+      <button class="next-btn" id="nextBtn">下一题</button>
+    </div>
+
+    <!-- 独立结果页 -->
+    <div class="result-page" id="resultPage">
+      <div class="result-icon"><i class="fas fa-leaf"></i></div>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <p class="result-desc" id="resultDesc"></p>
+      <div class="result-tip" id="resultTip"></div>
+      <button class="restart-btn" id="restartBtn">重新测试</button>
+    </div>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.quiz-card');
+    const progress = document.getElementById('progress');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const quizWrapper = document.getElementById('quizWrapper');
+    const resultPage = document.getElementById('resultPage');
+    const restartBtn = document.getElementById('restartBtn');
+    
+    let currentIndex = 0;
+    let totalQuestions = cards.length;
+
+    let score = {
+      "插画展":0,"艺术书展":0,"绘本展":0,"美食书展":0,"世界礼物市集":0,"动漫出版":0,"网络出版":0,"主宾国":0
+    };
+
+    const priority = ["插画展","绘本展","世界礼物市集","艺术书展","美食书展","动漫出版","网络出版","主宾国"];
+
+   const results = {
+  "插画展": {
+    title:"🎨 插画展",
+    desc:"你是被光影与线条偏爱的人，眼底藏着细腻浪漫的审美。一笔一画皆是温柔，插画展便是为你盛放的视觉梦境。",
+    tip:"✨在这里，邂逅手绘诗意、色彩浪漫，在笔触之间，遇见藏在画里的山海与温柔。",
+    img: "illu.jpg"
+  },
+  "艺术书展": {
+    title:"📕 艺术书展",
+    desc:"你偏爱清醒的小众与自由，不随世俗浪潮，在独立与先锋里安放灵魂。艺术书展，是专属于你的精神旷野。",
+    tip:"✨于小众出版物间穿行，触摸先锋思想，遇见不被定义的文艺与自我。",
+    img: "artbook.jpg"
+  },
+  "绘本展": {
+    title:"📖 绘本展",
+    desc:"你的心底住着柔软的孩童，偏爱简单、纯粹与治愈。绘本展是一方温柔秘境，抚平世间匆忙，予你松弛与安然。",
+    tip:"✨在童话与治愈画面里漫游，卸下疲惫，捡拾藏在故事里的细碎美好。",
+    img: "picture.jpg"
+  },
+  "美食书展": {
+    title:"🍜 美食书展",
+    desc:"你热爱人间烟火，在三餐四季里感知生活诗意。烟火最抚人心，美食书展便是藏着热气与温柔的人间一隅。",
+    tip:"✨循着香气与食书，触摸烟火文化，感受食物里的时光、乡愁与温柔日常。",
+    img: "food.jpg"
+  },
+  "世界礼物市集": {
+    title:"🎁 世界礼物市集",
+    desc:"你心怀好奇与远方，热爱多元风物与异域浪漫。世界礼物市集，是一场跨越山海、奔赴美好的温柔相遇。",
+    tip:"✨搜罗各国风物手信，触摸异域文化，把远方的浪漫与美好收入囊中。",
+    img: "gift.jpg"
+  },
+  "动漫出版": {
+    title:"🎮 动漫出版中心",
+    desc:"你永远怀揣少年意气，热爱热血、幻想与纯粹浪漫。动漫出版中心，是你安放热血与童心的浪漫星球。",
+    tip:"✨沉浸二次元宇宙，邂逅热血故事与鲜活IP，守住心底永不褪色的少年浪漫。",
+    img: "anime.jpg"
+  },
+  "网络出版": {
+    title:"💻 网络出版联合展台",
+    desc:"你拥抱新潮与鲜活，偏爱无边无际的奇幻脑洞与自由表达。网络出版展区，是专属于你的、无拘束的年轻幻想新世界。",
+    tip:"✨解锁网文、虚拟故事、脑洞创作，在自由鲜活的文字次元里，奔赴无限可能。",
+    img: "netpub.jpg"
+  },
+  "主宾国": {
+    title:"🤝 主宾国 · 限定隐藏结果",
+    desc:"你心怀世界、包容多元，热爱跨越国界的文化碰撞与思想交融。主宾国展区，是专属于你的国际文化对话秘境。",
+    tip:"✨跨越山海，对话世界，在这里邂逅不同国家的文化、故事与浪漫，感受全球出版的魅力。",
+    img: "https://你的图床链接/hostcountry.jpg"
+  }
+};
+
+    // 更新进度条
+    function updateProgress() {
+      const percent = ((currentIndex + 1) / totalQuestions) * 100;
+      progress.style.width = percent + '%';
+    }
+
+    // 切换题目
+    function showCurrentCard() {
+      cards.forEach(c => c.classList.remove('active'));
+      cards[currentIndex].classList.add('active');
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.textContent = currentIndex === totalQuestions - 1 ? '查看结果' : '下一题';
+      updateProgress();
+    }
+
+    // 选项点击
+    document.querySelectorAll('.option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const parent = opt.closest('.options');
+        parent.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+    });
+
+    // 下一题
+    nextBtn.addEventListener('click', () => {
+      const activeCard = cards[currentIndex];
+      const selected = activeCard.querySelector('.option.selected');
+      if (!selected) {
+        alert('请选择一个选项');
+        return;
+      }
+
+      // 计分
+      const weightStr = selected.dataset.weight;
+      const items = weightStr.split(',');
+      items.forEach(item => {
+        const [k, v] = item.split(':');
+        score[k] += Number(v);
+      });
+
+      if (currentIndex < totalQuestions - 1) {
+        currentIndex++;
+        showCurrentCard();
+      } else {
+        // 显示独立结果页
+        quizWrapper.style.display = 'none';
+        document.querySelector('.btn-group').style.display = 'none';
+        resultPage.classList.add('show');
+        showFinalResult();
+      }
+    });
+
+    // 上一题（已修复）
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        showCurrentCard();
+      }
+    });
+
+    // 计算结果
+    function showFinalResult() {
+      let winner = "";
+      if(score["主宾国"] >= 2.5 && score["世界礼物市集"] >= 4 && score["网络出版"] >=4) {
+        winner = "主宾国";
+      } else {
+        let maxScore = -1;
+        priority.forEach(t => {
+          if (t !== "主宾国" && score[t] > maxScore) {
+            maxScore = score[t];
+            winner = t;
+          }
+        });
+      }
+
+      const res = results[winner];
+      document.getElementById('resultTitle').innerText = res.title;
+      document.getElementById('resultDesc').innerText = res.desc;
+      document.getElementById('resultTip').innerText = res.tip;
+    }
+
+    // 重新测试
+    restartBtn.addEventListener('click', () => {
+      currentIndex = 0;
+      score = {"插画展":0,"艺术书展":0,"绘本展":0,"美食书展":0,"世界礼物市集":0,"动漫出版":0,"网络出版":0,"主宾国":0};
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      
+      quizWrapper.style.display = 'block';
+      document.querySelector('.btn-group').style.display = 'flex';
+      resultPage.classList.remove('show');
+      showCurrentCard();
+    });
+
+    showCurrentCard();
+  </script>
+</body>
+</html>
